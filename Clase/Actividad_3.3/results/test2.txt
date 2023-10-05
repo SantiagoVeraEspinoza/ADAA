@@ -1,0 +1,80 @@
+Knapsack Problem: Items = 200, Kanpsack Max Weight = 1398
+
+Greedy Take First Item:
+i=0 : w=410 : p=1900
+i=1 : w=720 : p=1312
+i=2 : w=41 : p=190
+i=8 : w=41 : p=190
+i=9 : w=90 : p=164
+i=10 : w=82 : p=380
+Total Items in the Knapsack = 6
+Total Weight = 1384/1398
+Total Profit = 4136
+
+Greedy Min Weight:
+i=0 : w=41 : p=190
+i=1 : w=41 : p=190
+i=2 : w=41 : p=190
+i=3 : w=41 : p=190
+i=4 : w=41 : p=190
+i=5 : w=41 : p=190
+i=6 : w=41 : p=190
+i=7 : w=41 : p=190
+i=8 : w=41 : p=190
+i=9 : w=41 : p=190
+i=10 : w=41 : p=190
+i=11 : w=41 : p=190
+i=12 : w=41 : p=190
+i=13 : w=82 : p=380
+i=14 : w=82 : p=380
+i=15 : w=82 : p=380
+i=16 : w=82 : p=380
+i=17 : w=82 : p=380
+i=18 : w=82 : p=380
+i=19 : w=82 : p=380
+i=20 : w=82 : p=380
+i=21 : w=82 : p=380
+i=22 : w=90 : p=164
+Total Items in the Knapsack = 23
+Total Weight = 1361/1398
+Total Profit = 6054
+
+Greedy Max Profit:
+i=0 : w=410 : p=1900
+i=1 : w=410 : p=1900
+i=2 : w=410 : p=1900
+i=119 : w=164 : p=760
+Total Items in the Knapsack = 4
+Total Weight = 1394/1398
+Total Profit = 6460
+
+Greedy Max Profit/Weight:
+i=0 : w=41 : p=190
+i=1 : w=41 : p=190
+i=2 : w=41 : p=190
+i=3 : w=41 : p=190
+i=4 : w=41 : p=190
+i=5 : w=41 : p=190
+i=6 : w=41 : p=190
+i=7 : w=41 : p=190
+i=8 : w=41 : p=190
+i=9 : w=41 : p=190
+i=10 : w=41 : p=190
+i=11 : w=41 : p=190
+i=12 : w=41 : p=190
+i=13 : w=82 : p=380
+i=14 : w=82 : p=380
+i=15 : w=82 : p=380
+i=16 : w=82 : p=380
+i=17 : w=82 : p=380
+i=18 : w=82 : p=380
+i=19 : w=82 : p=380
+i=20 : w=82 : p=380
+i=21 : w=82 : p=380
+i=22 : w=123 : p=570
+Total Items in the Knapsack = 23
+Total Weight = 1394/1398
+Total Profit = 6460
+
+Best Strategy was "Greedy Max Profit" with 6460 of profit
+With Dynamic Programming the profit is = 6460

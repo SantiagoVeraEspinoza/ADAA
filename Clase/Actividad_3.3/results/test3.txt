@@ -1,0 +1,51 @@
+Knapsack Problem: Items = 40, Kanpsack Max Weight = 25
+
+Greedy Take First Item:
+i=0 : w=15 : p=51
+i=5 : w=6 : p=97
+i=10 : w=1 : p=24
+i=18 : w=1 : p=98
+i=31 : w=1 : p=11
+Total Items in the Knapsack = 5
+Total Weight = 24/25
+Total Profit = 281
+
+Greedy Min Weight:
+i=0 : w=1 : p=24
+i=1 : w=1 : p=98
+i=2 : w=1 : p=11
+i=3 : w=2 : p=6
+i=4 : w=2 : p=76
+i=5 : w=3 : p=5
+i=6 : w=3 : p=126
+i=7 : w=4 : p=1
+i=8 : w=4 : p=7
+Total Items in the Knapsack = 9
+Total Weight = 21/25
+Total Profit = 354
+
+Greedy Max Profit:
+i=0 : w=5 : p=127
+i=2 : w=3 : p=126
+i=3 : w=15 : p=124
+i=13 : w=1 : p=98
+i=29 : w=1 : p=24
+Total Items in the Knapsack = 5
+Total Weight = 25/25
+Total Profit = 499
+
+Greedy Max Profit/Weight:
+i=0 : w=1 : p=98
+i=1 : w=3 : p=126
+i=2 : w=2 : p=76
+i=3 : w=5 : p=127
+i=4 : w=1 : p=24
+i=5 : w=5 : p=111
+i=6 : w=7 : p=123
+i=10 : w=1 : p=11
+Total Items in the Knapsack = 8
+Total Weight = 25/25
+Total Profit = 696
+
+Best Strategy was "Greedy Max Profit/Weight" with 696 of profit
+With Dynamic Programming the profit is = 696
