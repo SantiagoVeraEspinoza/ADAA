@@ -75,7 +75,7 @@ class article {
 };
 
 // Greedy - O(n)
-vector <pair <int, article>> greedy(vector <article> input, int max_weight, float curr_val = 0.0, vector <pair <int, article>> res = {{-1, article()}}, int curr = 0) {
+vector <pair <int, article>> greedy(vector <article> input, int max_weight, float curr_val = 0.0, vector <pair <int, article>> res = { {-1, article()} }, int curr = 0) {
     if (curr >= input.size()) return res; // Si es mayor a n, regresa el resultado - O(1)
 
     int n_weight = max_weight - input[curr].getWeight(); // Obtiene el nuevo peso máximo - O(1)
@@ -91,21 +91,17 @@ vector <pair <int, article>> greedy(vector <article> input, int max_weight, floa
 }
 
 // DP - O(nw)
-float dpKS(vector <article> input, int max_weight, vector <vector <float>> dp, int curr = 0) { // dp[n][w]
-    if (dp[curr][max_weight] != -1) return dp[curr][max_weight];
+float dpKS(vector <article> input, int max_weight, vector <vector <float>> &dp, int curr = 0) { // dp[n][w]
+    if (dp[curr][max_weight] != -1) return dp[curr][max_weight]; // El dp evita que se hagan iteraciones inecesarias, en el peor de los casos se recorrera todo dp (nw) - O(1)
     if (curr >= input.size() || max_weight <= 0) return dp[curr][max_weight] = 0;
 
-    cout << curr << " " << max_weight << endl;
+    int n_weight = max_weight - input[curr].getWeight(); // Obtiene el nuevo peso máximo - O(nw)
+    if (n_weight < 0) return dp[curr][max_weight] = dpKS(input, max_weight, dp, curr + 1);
 
-    int n_weight = max_weight - input[curr].getWeight(); // Obtiene el nuevo peso máximo - O(1)
-    if (n_weight <= 0) return dp[curr][max_weight] = dpKS(input, max_weight, dp, curr + 1);
+    float has = dpKS(input, n_weight, dp, curr + 1) + input[curr].getValue(); // Obtiene el nuevo valor acumulado - O(nw)
+    float has_not = dpKS(input, max_weight, dp, curr + 1); // Obtiene el nuevo valor acumulado - O(nw)
 
-    float has = dpKS(input, n_weight, dp, curr + 1) + input[curr].getValue(); // Obtiene el nuevo valor acumulado - O(1)
-    float has_not = dpKS(input, max_weight, dp, curr + 1); // Obtiene el nuevo valor acumulado - O(1)
-
-    if (has > has_not) return dp[curr][max_weight] = has;
-
-    return dp[curr][max_weight] = has_not;
+    return dp[curr][max_weight] = max(has, has_not); // Regresa el máximo entre si se incluye o no el artículo - O(1)
 }
 
 // Merge - O(l + r)
@@ -193,22 +189,18 @@ void mergeSort(std::vector<article>& arr, int left, int right, string unmatcher 
     }
 }
 
+// Proceso principal - O(n(log(n) + w)
 void process() {
     int n, w;
 
-    cout << "Inserta el número de artículos: ";
-    cin >> n;
-    cout << endl;
+    cin >> n >> w;
 
-    cout << "Inserta el peso máximo: ";
-    cin >> w;
-    cout << endl;
+    cout << endl << "Knapsack Problem: Items = " << n << ", Kanpsack Max Weight = " << w << endl;
 
     vector <article> articles;
     
     for (int i = 0; i < n; i++) // Obtiene todos los artículos - o(n)
     {
-        cout << "Elemento " << i << ": ";
         int w;
         float v;
         cin >> w >> v;
@@ -290,20 +282,20 @@ void process() {
 
     vector <vector <float>> dp(articles.size()+1, vector <float>(w+1, -1)); // Crea una matriz para el dp - O(nw)
 
-    float dp_res = dpKS(articles, w, dp);
+    float dp_res = dpKS(articles, w, dp); // Resuleve por DP - O(nw)
 
     float closest_res = -1;
     int closest_res_id;
-    for (int i=0; i<results_greedy.size(); i++) {
-        float dist = fabs(results_greedy[i] - dp_res);
+    for (int i=0; i<results_greedy.size(); i++) { // Itera por los resultados obtenidos por greedy - O(1)
+        float dist = fabs(results_greedy[i] - dp_res); // Obtiene la distancia entre la solución por dp y la actual
 
-        if (closest_res == -1 || dist < closest_res) {
+        if (closest_res == -1 || dist < closest_res) { // Obtiene el que tenga menor distancia a la solución por DP
             closest_res = dist;
             closest_res_id = i;
         }
     }
 
-    cout << endl << "Best Strategy was ";
+    cout << endl << "Best Strategy was \"";
     switch(closest_res_id) {
         case 0:
             cout << "Greedy Take First Item";
@@ -320,8 +312,8 @@ void process() {
         default:
             break;
     }
-    cout << " with " << results_greedy[closest_res_id] << " of profit" << endl;
-    cout << "With Dynamic Programming the profit is = " << dp_res;
+    cout << "\" with " << results_greedy[closest_res_id] << " of profit" << endl;
+    cout << "With Dynamic Programming the profit is = " << dp_res << endl << endl;
 }
 
 #ifdef _WIN32
