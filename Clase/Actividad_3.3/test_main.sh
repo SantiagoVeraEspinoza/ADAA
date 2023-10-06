@@ -14,7 +14,7 @@ echo $(find "$TESTS_PATH" -type f)
 
 echo -e "\nFile paths saved to $OUTPUT_FILE\n"
 
-g++ -std=c++11 -o ${SRC_DIR}/main ${SRC_DIR}/main.cpp
+g++ -o ${SRC_DIR}/main ${SRC_DIR}/main.cpp
 
 echo -e "Executable created"
 

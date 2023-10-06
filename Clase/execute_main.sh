@@ -26,8 +26,8 @@ then
     THIS_DIR=$(echo "${THIS_FILE}" | sed -E 's/[a-zA-Z0-9\-\_\s]+\.cpp$//')
     FILENAME="$(basename ${THIS_FILE} | sed -E 's/.cpp//')"
     g++ -std=c++17 -o "${THIS_DIR}${FILENAME}" "${THIS_FILE}"
-    "${THIS_DIR}${FILENAME}"
-    rm "${THIS_DIR}${FILENAME}"
+    "${THIS_DIR}${FILENAME}".exe
+    rm "${THIS_DIR}${FILENAME}".exe
 elif [ $(echo ${THIS_FILE} | grep -c .cpp) -le 0 ]
 then
     echo -e "\nIncorrect command: File is not a cpp file.\n"
