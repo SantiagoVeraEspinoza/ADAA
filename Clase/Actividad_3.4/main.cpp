@@ -59,6 +59,24 @@ bool graphDecision(vector <vector <int>> adj_list, vector <int> colors, int n_co
     return false;
 }
 
+// Problema de permutación del grafo - O(nc^n)
+void graphPermutation(vector <vector <int>> adj_list, vector <int> colors, int n_colors, int curr) {
+    if (curr == adj_list.size()) {
+        for (auto e:colors) { // Imprime los colores de cada nodo - O(n)
+            cout << e + 1 << " ";
+        }
+        cout << endl;
+        return; // Si equivale al número de colores - O(1)
+    }
+    for (int i=0; i<n_colors; i++) { // Por todos los colores - O(c)
+        if (canUseColor(adj_list, curr, i, colors)) { // Identifica si se puede utilizar el color (para simplificar será n, asumiendo que se puede ir desde un vector hacia cualquier otro) - O(n)
+            colors[curr] = i;
+            graphPermutation(adj_list, colors, n_colors, curr + 1); // Recursivo con uno arriba - O(nc^n)
+            colors[curr] = -1;
+        }
+    }
+}
+
 // Problema de optimización del grafo - O(n^2)
 int GraphOptimization(vector <vector <int>> adj_list) {
     vector <int> colors(adj_list.size(), -1); // Inicializa el vector de colores - O(n)
@@ -85,6 +103,7 @@ int GraphOptimization(vector <vector <int>> adj_list) {
         cout << "Node " << i + 1 << " <-> Assigned Color: " << colors[i] << endl;
     }
     cout << "Max colors: " << crom_num << endl; // Número cromático
+    return crom_num;
 }
 
 // Proceso principal - O(n^n)
@@ -110,7 +129,7 @@ void process()
 
     cout << endl << "Graph Optimization Problem:" << endl;
 
-    GraphOptimization(adj_list); // Ejecuta la optimización - O(n^2)
+    int cromatic_num = GraphOptimization(adj_list); // Ejecuta la optimización - O(n^2)
 
     // Desición con Grafo
 
@@ -121,13 +140,23 @@ void process()
         cout << "The graph can be colored with " << i+1 << " color";
         if (i > 0) cout << "s";
         cout << "? "; 
-        if (graphDecision(adj_list, colors, i+1, 0)) cout << "True" << endl; // Evalue el número de colores - O(nc^n) -> O(nn^n) -> O(n^n)
+        if (graphDecision(adj_list, colors, i+1, 0)) cout << "True" << endl; // Evalue el número de colores - O(nc^n) -> O(nn^n) -> O(n^1*n^n) -> O(n^(n+1)) -> O(n^n)
+        // c es n ya que (suma(x=0, x<n, proceso * (n-x))) esta comprobado que termina siendo (proceso * n) en el peor de los casos, es la misma razón por la que dos punteros es n^2
+        // https://stackoverflow.com/questions/63219277/time-complexity-of-algorithms-using-two-pointers-is-it-0n-or-0n2
         else cout << "False" << endl;
     }
 
     // Permutaciones de Grafo
 
     cout << endl << "Graph Permutation Problem:" << endl;
+    for (int i=1; i<=cromatic_num; i++) { // Itera hasta el número cromático - O(n^n)
+        cout << "With " << i << " color";
+        if (i>1) cout << "s";
+        cout << ":" << endl;
+        graphPermutation(adj_list, colors, i, 0); // Imprime las permutaciones de un número de colores - O(nc^n) -> O(nn^n) -> O(n^1*n^n) -> O(n^(n+1)) -> O(n^n)
+        // c es n ya que (suma(x=0, x<n, proceso * (n-x))) esta comprobado que termina siendo (proceso * n) en el peor de los casos, es la misma razón por la que dos punteros es n^2
+        // https://stackoverflow.com/questions/63219277/time-complexity-of-algorithms-using-two-pointers-is-it-0n-or-0n2
+    }
 }
 
 #ifdef _WIN32
