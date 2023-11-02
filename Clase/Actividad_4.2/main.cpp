@@ -1,5 +1,7 @@
 #include <iostream>
 #include <math.h>
+#include <cfloat>
+#include <algorithm>
 #include <vector>
 
 using namespace std;
@@ -140,7 +142,21 @@ std::vector<Point> mergeSort(const std::vector<Point>& points, bool byX=true) {
     return merge(left, right, byX); // Junta ambas partes - O(n)
 }
 
-// Proceso principal - O(n + nlog(n))
+// Los dos puntos más cercanos por fuerza bruta - O(n^2)
+float bruteForce(vector <Point> input) {
+    float min = FLT_MAX;
+
+    for (int i=0; i<input.size(); i++) { // Itera por los puntos - O(n) -> O(n^2)
+        for (int j=0; j<input.size(); j++) { // Itera por los puntos - O(n)
+            if (i == j) continue; // Se salta cuando el se evalua un punto con él mismo
+            min = std::min(min, input[i].distanceTo(input[j]));
+        }
+    }
+
+    return min;
+}
+
+// Proceso principal - O(n + nlog(n) + n^2) -> O(n^2)
 void process()
 {
     int n;
@@ -157,10 +173,12 @@ void process()
         points.push_back(p);
     }
 
+    cout << "Brute force: " << bruteForce(points) << endl; // Resuelve por fuerza bruta - O(n^2)
+
     vector <Point> p_x = mergeSort(points, true); // Vector de puntos ordenado por coordenada x ascendentemente - O(nlog(n))
     vector <Point> p_y = mergeSort(points, false); // Vector de puntos ordenado por coordenada y ascendentemente - O(nlog(n))
 
-    cout << p_x << endl << p_y;
+    cout << p_x << endl << p_y << endl;
 }
 
 #ifdef _WIN32
