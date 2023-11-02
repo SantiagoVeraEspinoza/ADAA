@@ -35,6 +35,13 @@ std::ostream& operator << (std::ostream& os, const std::vector<T>& v) {
     return os;
 }
 
+// Sobrecarga del cout para pares - O(1)
+template <class T1, class T2>
+std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
+    os << "(" << p.first << ", " << p.second << ")";
+    return os;
+}
+
 // Clase punto
 class Point {
     private: // Coordenadas
@@ -168,10 +175,7 @@ pair<float, pair<int, int>> bruteForce(vector <Point> input) {
 pair<float, pair <int, int>> divideAndConquer(vector <Point> p_x, vector <Point> p_y) { // Recibe los vectores preordenados
     int n = p_x.size();
 
-    if (n == 2) return make_pair(p_x[0].distanceTo(p_x[1]), make_pair(0, 1)); // Regresa la distancia mínima y los id's de los puntos encontrados
-    if (n == 3) {
-
-    }
+    if (n <= 3) return bruteForce(p_x); // Regresa el resultado de un bruteforce en los nodos - O(6) -> O(1)
 }
 
 // Proceso principal - O(n + nlog(n) + n^2) -> O(n^2)
@@ -200,6 +204,7 @@ void process() {
     vector <Point> p_y = mergeSort(points, false); // Vector de puntos ordenado por coordenada y ascendentemente - O(nlog(n))
 
     cout << p_x << endl << p_y << endl;
+    cout << divideAndConquer({{1, 1}, {2, 2}, {3, 4}}, {{1, 1}, {2, 2}}).second;
 }
 
 #ifdef _WIN32
