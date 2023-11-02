@@ -143,22 +143,39 @@ std::vector<Point> mergeSort(const std::vector<Point>& points, bool byX=true) {
 }
 
 // Los dos puntos más cercanos por fuerza bruta - O(n^2)
-float bruteForce(vector <Point> input) {
+pair<float, pair<int, int>> bruteForce(vector <Point> input) {
     float min = FLT_MAX;
+
+    int p1, p2;
 
     for (int i=0; i<input.size(); i++) { // Itera por los puntos - O(n) -> O(n^2)
         for (int j=0; j<input.size(); j++) { // Itera por los puntos - O(n)
-            if (i == j) continue; // Se salta cuando el se evalua un punto con él mismo
-            min = std::min(min, input[i].distanceTo(input[j]));
+            if (i == j) continue; // Se salta cuando se evalua un punto con él mismo
+
+            float d = input[i].distanceTo(input[j]); // Obtiene la distancia
+            if ( d <= min) {
+                min = d; 
+                p1 = std::min(i, j); // El más pequeño
+                p2 = std::max(i, j); // El más grande
+            }
         }
     }
 
-    return min;
+    return make_pair(min, make_pair(p1, p2));
+}
+
+// Los dos puntos más cercanos por técnica divide y vencerás - O(nlog(n))
+pair<float, pair <int, int>> divideAndConquer(vector <Point> p_x, vector <Point> p_y) { // Recibe los vectores preordenados
+    int n = p_x.size();
+
+    if (n == 2) return make_pair(p_x[0].distanceTo(p_x[1]), make_pair(0, 1)); // Regresa la distancia mínima y los id's de los puntos encontrados
+    if (n == 3) {
+
+    }
 }
 
 // Proceso principal - O(n + nlog(n) + n^2) -> O(n^2)
-void process()
-{
+void process() {
     int n;
 
     cin >> n; // Número de puntos
@@ -173,7 +190,11 @@ void process()
         points.push_back(p);
     }
 
-    cout << "Brute force: " << bruteForce(points) << endl; // Resuelve por fuerza bruta - O(n^2)
+    pair<float, pair <int, int>> brute_force = bruteForce(points); // Resuelve por fuerza bruta - O(n^2)
+
+    cout << "Brute force: " << brute_force.first << endl;
+
+    cout << "The closest points are: " << brute_force.second.first + 1 << " and " << brute_force.second.second + 1 << endl;
 
     vector <Point> p_x = mergeSort(points, true); // Vector de puntos ordenado por coordenada x ascendentemente - O(nlog(n))
     vector <Point> p_y = mergeSort(points, false); // Vector de puntos ordenado por coordenada y ascendentemente - O(nlog(n))
