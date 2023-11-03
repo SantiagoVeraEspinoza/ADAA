@@ -42,6 +42,16 @@ std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
     return os;
 }
 
+// Regresa una porción de un vector dado un rango - O(v)
+template <typename T>
+vector <T> selectVectorRange(vector <T> input, int start, int end) {
+    vector <T> res;
+    for (int i=start; i < end; i++) { // Itera de principio a fin - O(v)
+        res.push_back(input[i]);
+    }
+    return res;
+}
+
 // Clase punto
 class Point {
     private: // Coordenadas
@@ -171,14 +181,42 @@ pair<float, pair<int, int>> bruteForce(vector <Point> input) {
     return make_pair(min, make_pair(p1, p2));
 }
 
-// Los dos puntos más cercanos por técnica divide y vencerás - O(nlog(n))
-pair<float, pair <int, int>> divideAndConquer(vector <Point> p_x, vector <Point> p_y) { // Recibe los vectores preordenados
-    int n = p_x.size();
-
-    if (n <= 3) return bruteForce(p_x); // Regresa el resultado de un bruteforce en los nodos - O(6) -> O(1)
+// Regresa todos los elementos de un vector de puntos dentro de un rango en el eje x - O(v)
+vector <Point> pointsInAXRange(vector <Point> input, int left_limit, int right_limit) {
+    vector <Point> res;
+    for (auto e:input) { // Itera de principio a fin - O(v)
+        if (left_limit <= e.getX() && e.getX() <= right_limit) res.push_back(e); // Si el elemento esta dentro del rango
+    }
+    return res;
 }
 
-// Proceso principal - O(n + nlog(n) + n^2) -> O(n^2)
+// Los dos puntos más cercanos por técnica divide y vencerás - O(nlog(n))
+float divideAndConquer(vector <Point> p_x, vector <Point> p_y) { // Recibe los vectores preordenados
+    int n = p_x.size(); // Tamaño del arreglo en x
+
+    // Caso límite
+    if (n <= 3) return bruteForce(p_x).first; // Regresa el resultado de un bruteforce en los nodos - O(6) -> O(1)
+
+    // Divide en x usando el centro
+    int mid = n/2;
+    vector <Point> lp_x = selectVectorRange(p_x, 0, mid); // Porción izquierda - O(n/2) -> O(n)
+    vector <Point> rp_x = selectVectorRange(p_x, mid, n); // Porción derecha - O(n/2) -> O(n)
+    float d_l = divideAndConquer(lp_x, p_y); // Recursión, obtener el mínimo de cada porción. Se hace recursión por la mitad de cada arreglo
+    float d_r = divideAndConquer(rp_x, p_y); // Se hace recursión P(n/2), como se divide constantemente, serán log(n) veces un proceso O(n) - O(nlog(n))
+    float d = std::min(d_l, d_r); // El mínimo de los dos mínimos
+
+    vector <Point> S = pointsInAXRange(p_y, p_x[mid].getX() - d, p_x[mid].getX() + d); // Obtiene la franja del medio +/- d en el eje x - O(n)
+    for (int i=0; i<S.size(); i++) {
+        for (int j=1; j<=7; j++) { // Itera por los posibles siguientes 7 puntos - O(7) -> O(1)
+            if (j >= S.size()) continue;
+            d = std::min(S[i].distanceTo(S[i+j]), d);
+        }
+    }
+
+    return d;
+}
+
+// Proceso principal - O(n + nlog(n) + n^2 + 3nlog(n)) -> O(n^2)
 void process() {
     int n;
 
@@ -203,8 +241,7 @@ void process() {
     vector <Point> p_x = mergeSort(points, true); // Vector de puntos ordenado por coordenada x ascendentemente - O(nlog(n))
     vector <Point> p_y = mergeSort(points, false); // Vector de puntos ordenado por coordenada y ascendentemente - O(nlog(n))
 
-    cout << p_x << endl << p_y << endl;
-    cout << divideAndConquer({{1, 1}, {2, 2}, {3, 4}}, {{1, 1}, {2, 2}}).second;
+    cout << "Divide & Conquer: " << divideAndConquer(p_x, p_y) << endl; // Imprime el resultado por divide y vencerás - O(nlog(n))
 }
 
 #ifdef _WIN32

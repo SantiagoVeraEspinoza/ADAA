@@ -1,0 +1,3 @@
+Brute force: 7.61577
+The closest points are: 2 and 11
+Divide & Conquer: 7.61577
