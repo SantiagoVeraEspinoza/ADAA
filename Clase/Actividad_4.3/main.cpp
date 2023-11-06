@@ -2,6 +2,7 @@
 #include <vector>
 #include <limits>
 #include <stack>
+#include <algorithm>
 
 using namespace std;
 
@@ -179,7 +180,7 @@ vector <T> excludeID(int id, vector<T> input) { // Borra un id de un vector - O(
     return res;
 }
 
-// Graham Scan, obtener el polígono convexo más pequeño que encierre a todos los puntos - O(nlog(n))
+// Graham Scan, obtener el polígono convexo más pequeño que encierre a todos los puntos - O(4n + nlog(n)) -> O(nlog(n))
 vector <Point> grahamScan(vector <Point> input) {
     Point min = Point(0.0f, numeric_limits<float>::infinity()); // Punto inicializado en el máximo para su valor en y
     int min_id = -1;
@@ -196,19 +197,35 @@ vector <Point> grahamScan(vector <Point> input) {
     points_above = min.mergeSort(points_above); // Ordena todos los puntos de arriba del mínimo en torno a este último
     // El orden es por sentido antihorario de los grados - O(nlog(n))
 
-    cout << min << " " << points_above;
+    stack <Point> stack_points; // Stack para apilar el resultado convexo
+    stack_points.push(min); // Agrega los primeros dos primeros puntos posibles
+    stack_points.push(points_above[0]);
 
-    stack <Point> stack_points;
-    stack_points.push(min);
+    for (int i=1; i<points_above.size(); i++) { // Itera por todos los puntos en orden de ángulo - O(2n) -> O(n)
+        Point next = points_above[i];
+        Point curr = stack_points.top();
+        stack_points.pop();
 
-    for (auto point:points_above) {
-
+        // Si gira en sentido horario se regresa un punto
+        while (!stack_points.empty() && stack_points.top().whereTheyTurn(curr, next) <= 0) {
+            // Una vez se elimine un punto, nunca se regresará a él, por eso la complejidad no aumenta con este procedimiento
+            curr = stack_points.top();
+            stack_points.pop();
+        }
+        stack_points.push(curr); // Se agrega el nodo actual y el próximo
+        stack_points.push(next);
     }
 
-    return input;
+    vector <Point> res;
+    while (!stack_points.empty()) { // Se destruye la pila para generar la respuesta - O(n)
+        res.push_back(stack_points.top());
+        stack_points.pop();
+    }
+
+    return res;
 }
 
-// Proceso principal - O()
+// Proceso principal - O(n + nlog(n)) -> O(nlog(n))
 void process()
 {
     int n; // Número de puntos
@@ -223,11 +240,9 @@ void process()
         points.push_back(Point(x, y));
     }
 
-    Point piv;
-
-    //cout << points << endl;
-    //cout << piv.mergeSort(points) << endl;
-    grahamScan(points);
+    for (auto e:grahamScan(points)) { // Se itera por todos los puntos resultantes del Graham Scan - O(n + nlog(n)) -> O(nlog(n))
+        cout << e << endl;
+    }
 }
 
 #ifdef _WIN32
