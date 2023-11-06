@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <limits>
+#include <stack>
 
 using namespace std;
 
@@ -54,10 +56,12 @@ class Point {
                 if (this->whereTheyTurn(leftArr[leftIndex], rightArr[rightIndex]) > 0) { // Giro antihorario
                     result.push_back(leftArr[leftIndex]);
                     leftIndex++;
+                    continue;
                 } 
                 if (this->whereTheyTurn(leftArr[leftIndex], rightArr[rightIndex]) < 0) { // Giro horario
                     result.push_back(rightArr[rightIndex]);
                     rightIndex++;
+                    continue;
                 }
                 else { // Colinealidad
                     // Pendiente entre ambos puntos
@@ -112,6 +116,14 @@ class Point {
             return result;
         }
 
+        // Calcula el producto cruz del punto origen al punto objetivo, uando como pivote el punto actual - O(1)
+        float crossProduct(Point source, Point target) { 
+            // Producto cruz usando el punto actual como origen - O(1)
+            float cross = (source.getX()-this->getX())*(target.getY()-this->getY()) - (target.getX()-this->getX())*(source.getY()-this->getY()); 
+
+            return cross;
+        }
+
     public:
         // Constructores
         Point() { this->x = this->y = 0; }
@@ -126,14 +138,6 @@ class Point {
         void setCoordinates(float x, float y) { this->x = x; this->y = y; }
 
         // Métodos
-        // Calcula el producto cruz del punto origen al punto objetivo, uando como pivote el punto actual - O(1)
-        float crossProduct(Point source, Point target) { 
-            // Producto cruz usando el punto actual como origen - O(1)
-            float cross = (source.getX()-this->getX())*(target.getY()-this->getY()) - (target.getX()-this->getX())*(source.getY()-this->getY()); 
-
-            return cross;
-        }
-
         // Regresa un entero indicando la dirección de giro - O(1)
         int whereTheyTurn(Point source, Point target) {
             float cross = this->crossProduct(source, target); // Evalua el producto cruz bruto - O(1)
@@ -165,21 +169,65 @@ class Point {
         }
 };
 
+template <typename T>
+vector <T> excludeID(int id, vector<T> input) { // Borra un id de un vector - O(v)
+    vector <T> res;
+    for (int i=0; i<input.size(); i++) { // Itera por el vector - O(v)
+        if (i == id) continue; // Evita el id dado
+        res.push_back(input[i]);
+    }
+    return res;
+}
+
+// Graham Scan, obtener el polígono convexo más pequeño que encierre a todos los puntos - O(nlog(n))
+vector <Point> grahamScan(vector <Point> input) {
+    Point min = Point(0.0f, numeric_limits<float>::infinity()); // Punto inicializado en el máximo para su valor en y
+    int min_id = -1;
+
+    for (int i=0; i<input.size(); i++) { // Obtiene el mínimo - O(n)
+        if (min.getY() > input[i].getY()) {
+            min = input[i];
+            min_id = i;
+        }
+    }
+
+    vector <Point> points_above = excludeID(min_id, input); // Elimina el punto mínimo del arreglo - O(n)
+
+    points_above = min.mergeSort(points_above); // Ordena todos los puntos de arriba del mínimo en torno a este último
+    // El orden es por sentido antihorario de los grados - O(nlog(n))
+
+    cout << min << " " << points_above;
+
+    stack <Point> stack_points;
+    stack_points.push(min);
+
+    for (auto point:points_above) {
+
+    }
+
+    return input;
+}
+
+// Proceso principal - O()
 void process()
 {
-    Point p1(3, 1);
-    Point p2(0, 3);
-    Point p3(0, 4);
-    Point p4(-1, 1);
-    Point p5(5, 4);
-    Point p6(0, 3);
-    Point p7(-2, 2);
+    int n; // Número de puntos
+
+    cin >> n;
+
+    vector <Point> points; // Arreglo de puntos
+
+    for (int i=0; i<n; i++) { // Obtener todos los puntos - O(n)
+        float x, y;
+        cin >> x >> y;
+        points.push_back(Point(x, y));
+    }
+
     Point piv;
 
-    // cout << piv.whereTheyTurn(p1, p1);
-
-    vector <Point> test_sort = {p1, p2, p3, p4, p5, p6, p7};
-    cout << piv.mergeSort(test_sort);
+    //cout << points << endl;
+    //cout << piv.mergeSort(points) << endl;
+    grahamScan(points);
 }
 
 #ifdef _WIN32
