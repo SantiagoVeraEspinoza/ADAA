@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/santi/OneDrive/Escritorio/Académico/ITESM/Semestres/5/ADAA/Clase/Integradora_2",
-      "program": "c:/Users/santi/OneDrive/Escritorio/Académico/ITESM/Semestres/5/ADAA/Clase/Integradora_2/build/Debug/outDebug",
+      "cwd": "c:/Users/santi/OneDrive/Escritorio/Académico/ITESM/Semestres/5/ADAA/Clase/Actividad_5.2",
+      "program": "c:/Users/santi/OneDrive/Escritorio/Académico/ITESM/Semestres/5/ADAA/Clase/Actividad_5.2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
